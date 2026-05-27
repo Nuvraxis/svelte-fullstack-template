@@ -21,11 +21,11 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 11.1.1   # Pinned — newer 11.x requires Node 22.13+
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22  # LTS — matches what's required by current pnpm 11.x
           cache: pnpm
 
       - name: Install
@@ -55,11 +55,11 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 11
+          version: 11.1.1   # Pinned — newer 11.x requires Node 22.13+
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22  # LTS — matches what's required by current pnpm 11.x
           cache: pnpm
 
       # Supabase CLI is needed to boot the local Postgres + Auth + Realtime stack.

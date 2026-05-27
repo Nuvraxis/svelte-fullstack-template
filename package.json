@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "description": "VaultFlow - Premium SvelteKit 5 dashboard template for Fintech + SaaS",
   "license": "MIT",
+  "packageManager": "pnpm@11.1.1",
   "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
+    "node": ">=20.11.0",
+    "pnpm": ">=11.0.0"
   },
   "scripts": {
     "dev": "pnpm --filter dashboard dev",
