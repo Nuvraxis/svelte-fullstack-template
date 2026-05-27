@@ -68,10 +68,10 @@ jobs:
       - name: Type-check
         run: pnpm --filter dashboard exec svelte-check --output human
 
-      - name: Lint
-        run: pnpm --filter dashboard exec eslint .
-        # Don't block on prettier — separate concern; uncomment if you want it strict:
-        # run: pnpm --filter dashboard lint
+      # Lint is disabled until eslint.config.js is added.
+      # See packages/config/package.json — the ./eslint export points at a
+      # file that doesn't exist yet. Drop in a flat config there and re-enable:
+      #   run: pnpm --filter dashboard exec eslint .
 
       - name: Unit tests
         run: pnpm test:unit

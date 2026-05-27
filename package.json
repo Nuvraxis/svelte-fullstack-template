@@ -30,9 +30,9 @@
     "supabase:stop": "pnpm --filter dashboard supabase:stop"
   },
   "devDependencies": {
-    "prettier": "^3.3.3",
-    "prettier-plugin-svelte": "^3.2.6",
-    "prettier-plugin-tailwindcss": "^0.6.8"
+    "prettier": "^3.8.3",
+    "prettier-plugin-svelte": "^4.0.1",
+    "prettier-plugin-tailwindcss": "^0.8.0"
   },
   "pnpm": {
     "overrides": {

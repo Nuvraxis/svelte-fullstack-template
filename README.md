@@ -3,7 +3,7 @@
 > **SvelteKit 5 · Supabase · Tailwind v4 · TypeScript**
 > Premium fintech + SaaS dashboard template with org-level RBAC, per-resource permission overrides, real-time transactions feed, and 4,000+ rows of realistic seed data.
 
-VaultFlow is a fully-working SvelteKit 5 admin dashboard that ships as source — no closed component library. Buy once, retheme via one CSS file, sell client implementations. Two verticals in one template: flip between **Fintech** and **SaaS** mode via a config flag.
+VaultFlow is a fully-working SvelteKit 5 admin dashboard that ships as source — no closed component library. Fork once, retheme via one CSS file, sell client implementations. Two verticals in one template: flip between **Fintech** and **SaaS** mode via a config flag.
 
 ## Product Demo
 - See [Demo Video]() of the product.
