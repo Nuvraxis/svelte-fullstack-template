@@ -8,7 +8,6 @@ Thanks for your interest! VaultFlow is MIT-licensed and we welcome bug fixes, fe
 ## Quick links
 
 - 📘 **[GUIDE.md](../GUIDE.md)** — full customization guide
-- 🧠 **[CLAUDE.md](../CLAUDE.md)** — architecture spec
 - 🐛 **[Open an issue](https://github.com/) → New issue** — bug reports or feature requests (use the templates)
 - 🔒 **Security issues** — email [security@nuvraxis.com](mailto:security@nuvraxis.com), please don't open a public issue
 
