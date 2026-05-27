@@ -1,0 +1,93 @@
+name: 💡 Feature request
+description: Propose a new feature, module, or improvement.
+title: "[Feature] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing an idea! Before filing, a quick check:
+
+        - 🔍 **Search first** — is this already requested?
+        - 💬 **Big or open-ended ideas** belong in [Discussions](../discussions) — features here should be reasonably scoped.
+        - 🛠️ **Need it built for you?** [nuvraxis.com](https://www.nuvraxis.com) offers custom builds on top of VaultFlow.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the user need or pain point — not the proposed code.
+      placeholder: |
+        As an admin, I want to ... so that ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What would the feature look like? Be concrete — wireframes, code sketches, route names.
+      placeholder: |
+        Add a new page at /audit-log/export that ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Have you thought about other ways to solve this? Why did you reject them?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Which area does this touch?
+      multiple: true
+      options:
+        - Auth / Login
+        - RBAC / Permissions
+        - Transactions
+        - Payments
+        - Fraud detection
+        - Customers
+        - Subscriptions
+        - Revenue / Analytics
+        - Reports
+        - Team management
+        - Audit log
+        - Settings
+        - API keys
+        - Notifications / Command palette
+        - Theme / Branding
+        - Database schema / migrations
+        - Realtime
+        - Tests / CI
+        - Docs
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How important is this for you?
+      options:
+        - "Nice to have"
+        - "Would significantly improve my workflow"
+        - "I'm currently blocked without it"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Are you willing to help?
+      options:
+        - label: I'd be willing to open a PR for this if the direction is approved
+          required: false
+        - label: I'd help test a PR from someone else
+          required: false
+        - label: I just want to suggest the idea
+          required: false

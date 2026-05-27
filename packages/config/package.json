@@ -1,0 +1,10 @@
+{
+  "name": "@vaultflow/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tsconfig.json": "./tsconfig.json",
+    "./eslint": "./eslint.config.js"
+  }
+}

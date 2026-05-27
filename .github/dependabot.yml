@@ -1,0 +1,116 @@
+version: 2
+
+# Dependabot scans these locations weekly and opens PRs to update outdated
+# dependencies. Grouped updates keep PR noise low. See:
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+updates:
+  # ── Root workspace (prettier + workspace tooling) ─────────────────────
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: deps
+      include: scope
+    labels:
+      - dependencies
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # ── Dashboard app (the heavy package) ─────────────────────────────────
+  - package-ecosystem: npm
+    directory: /apps/dashboard
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 8
+    commit-message:
+      prefix: deps(dashboard)
+      include: scope
+    labels:
+      - dependencies
+      - dashboard
+    groups:
+      svelte:
+        patterns:
+          - "svelte"
+          - "@sveltejs/*"
+          - "svelte-*"
+      supabase:
+        patterns:
+          - "@supabase/*"
+          - "supabase"
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "prettier-plugin-tailwindcss"
+      playwright:
+        patterns:
+          - "@playwright/*"
+          - "playwright"
+          - "@axe-core/*"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      fontsource:
+        patterns:
+          - "@fontsource/*"
+          - "@fontsource-variable/*"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Pin zod 3.x — 4.x has breaking changes we haven't migrated to yet.
+      - dependency-name: zod
+        update-types: [version-update:semver-major]
+
+  # ── Shared config package ─────────────────────────────────────────────
+  - package-ecosystem: npm
+    directory: /packages/config
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: deps(config)
+      include: scope
+    labels:
+      - dependencies
+    groups:
+      eslint:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+          - "typescript-eslint"
+          - "eslint-*"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  # ── GitHub Actions (workflow files) ───────────────────────────────────
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: ci
+      include: scope
+    labels:
+      - ci

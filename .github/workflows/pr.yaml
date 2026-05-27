@@ -1,0 +1,144 @@
+name: PR
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel stale runs when a new commit lands on the same branch.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── 1. Static checks (type-check + unit tests + lint) ─────────────────
+  static:
+    name: Type-check + unit + lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync SvelteKit
+        run: pnpm --filter dashboard exec svelte-kit sync
+
+      - name: Type-check
+        run: pnpm --filter dashboard exec svelte-check --output human
+
+      - name: Lint
+        run: pnpm --filter dashboard exec eslint .
+        # Don't block on prettier — separate concern; uncomment if you want it strict:
+        # run: pnpm --filter dashboard lint
+
+      - name: Unit tests
+        run: pnpm test:unit
+
+  # ─── 2. End-to-end (Playwright against a real local Supabase) ──────────
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # Supabase CLI is needed to boot the local Postgres + Auth + Realtime stack.
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync SvelteKit
+        run: pnpm --filter dashboard exec svelte-kit sync
+
+      # Cache Playwright browsers between runs (saves ~1 min per run).
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: pw-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter dashboard exec playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (cached browser)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter dashboard exec playwright install-deps chromium
+
+      - name: Boot local Supabase
+        working-directory: apps/dashboard
+        run: supabase start
+
+      - name: Write .env.local from supabase status
+        working-directory: apps/dashboard
+        shell: bash
+        run: |
+          set -e
+          eval "$(supabase status -o env)"
+          cat > .env.local <<EOF
+          PUBLIC_SUPABASE_URL=${API_URL}
+          PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}
+          SUPABASE_SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}
+          DATABASE_URL=${DB_URL}
+          PUBLIC_APP_MODE=both
+          PUBLIC_APP_NAME=VaultFlow
+          PUBLIC_DEFAULT_CURRENCY=USD
+          PUBLIC_DEFAULT_TIMEZONE=UTC
+          PUBLIC_FEATURE_REALTIME=true
+          PUBLIC_FEATURE_FRAUD=true
+          PUBLIC_FEATURE_EXPORTS=true
+          PUBLIC_FEATURE_REPORTS=true
+          EOF
+
+      - name: Seed demo data
+        run: pnpm seed:dev --reset
+
+      - name: Run Playwright
+        run: pnpm test:e2e
+
+      # On failure, upload the HTML report + traces/videos for debugging.
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/dashboard/playwright-report/
+          retention-days: 7
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: apps/dashboard/test-results/
+          retention-days: 7
+
+      # Always tear down so cached Docker volumes don't carry state between runs.
+      - name: Stop Supabase
+        if: always()
+        working-directory: apps/dashboard
+        run: supabase stop || true

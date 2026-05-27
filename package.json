@@ -1,0 +1,41 @@
+{
+  "name": "vaultflow",
+  "private": true,
+  "version": "0.1.0",
+  "description": "VaultFlow - Premium SvelteKit 5 dashboard template for Fintech + SaaS",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter dashboard dev",
+    "build": "pnpm --filter dashboard build",
+    "preview": "pnpm --filter dashboard preview",
+    "check": "pnpm --filter dashboard check",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,tsx,svelte,js,json,css,md}\"",
+    "test": "pnpm --filter dashboard test",
+    "test:unit": "pnpm --filter dashboard test:unit",
+    "test:e2e": "pnpm --filter dashboard test:e2e",
+    "test:a11y": "pnpm --filter dashboard test:a11y",
+    "test:mobile": "pnpm --filter dashboard test:mobile",
+    "db:reset": "pnpm --filter dashboard db:reset",
+    "db:studio": "pnpm --filter dashboard db:studio",
+    "db:types": "pnpm --filter dashboard db:types",
+    "seed:dev": "pnpm --filter dashboard seed:dev",
+    "seed:reset": "pnpm --filter dashboard seed:reset",
+    "supabase:start": "pnpm --filter dashboard supabase:start",
+    "supabase:stop": "pnpm --filter dashboard supabase:stop"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-svelte": "^3.2.6",
+    "prettier-plugin-tailwindcss": "^0.6.8"
+  },
+  "pnpm": {
+    "overrides": {
+      "zod": "3.25.76"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# Forces users into one of the templates above (bug / feature) instead of
+# opening a blank issue with no structure.
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 Question or discussion
+    url: https://github.com/discussions
+    about: "Have a question or want to talk about an idea? Start a discussion."
+
+  - name: 📘 Customization guide
+    url: https://github.com/blob/main/GUIDE.md
+    about: "Theme, fonts, permissions, deployment, troubleshooting — most questions are answered here."
+
+  - name: 🛠️ Commercial support / custom builds
+    url: https://www.nuvraxis.com
+    about: "Need someone to build, integrate, or customize VaultFlow for you? nuvraxis offers paid support."
+
+  - name: 🔒 Report a security vulnerability
+    url: mailto:security@nuvraxis.com
+    about: "Found an auth / RLS / permission bypass? Please email us — don't open a public issue."

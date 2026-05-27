@@ -1,0 +1,8 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Allow native build scripts to run (esbuild downloads platform binary).
+allowBuilds:
+  esbuild: true
+  '@parcel/watcher': true

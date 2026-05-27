@@ -1,0 +1,142 @@
+name: 🐛 Bug report
+description: Something isn't working the way the docs say it should.
+title: "[Bug] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. The more concrete the repro steps, the faster we can help.
+
+        **Not a bug?**
+        - Question about how to use the template → start a [Discussion](../discussions) instead.
+        - Security vulnerability → please email security@nuvraxis.com — **do not open a public issue**.
+        - Need commercial support / custom work → [nuvraxis.com](https://www.nuvraxis.com).
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: A clear description of the bug. What did you expect to happen vs. what actually happened?
+      placeholder: |
+        When I do X, Y happens. I expected Z.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal, numbered steps that someone else can follow.
+      placeholder: |
+        1. `pnpm supabase:start`
+        2. Log in as `alice@novapay.io`
+        3. Navigate to /transactions
+        4. Click ...
+        5. See error ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: input
+    id: vaultflow-version
+    attributes:
+      label: VaultFlow version / commit
+      description: Output of `git rev-parse HEAD` or the release tag.
+      placeholder: "e.g. v0.1.0 or abc1234"
+    validations:
+      required: true
+
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+      placeholder: "Output of `node --version`"
+    validations:
+      required: true
+
+  - type: input
+    id: pnpm
+    attributes:
+      label: pnpm version
+      placeholder: "Output of `pnpm --version`"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - WSL
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: env
+    attributes:
+      label: Where does this happen?
+      multiple: true
+      options:
+        - Local dev (`pnpm dev`)
+        - Local Supabase (`pnpm supabase:start`)
+        - Supabase Cloud
+        - Production build (`pnpm build`)
+        - Playwright E2E
+        - Vitest unit
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser (if UI-related)
+      options:
+        - "N/A — not UI"
+        - Chrome / Chromium / Edge
+        - Firefox
+        - Safari
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error logs / console output
+      description: |
+        Paste any relevant errors. Include both browser console AND server-side output (`pnpm dev` terminal) where possible. **Redact secrets** (anon keys, service-role keys, JWTs).
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: extras
+    attributes:
+      label: Additional context
+      description: Screenshots, screen recordings, network HAR exports, etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmations
+      options:
+        - label: I searched [existing issues](../) and didn't find a duplicate
+          required: true
+        - label: I'm on the latest `main` branch (or specified the version above)
+          required: true
+        - label: I've removed any sensitive data from the logs/screenshots above
+          required: true
