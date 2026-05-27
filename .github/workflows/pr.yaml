@@ -11,9 +11,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ─── 0. Detect whether real source code changed ────────────────────────
+  # Docs-only / template-only / license-only changes shouldn't burn CI minutes.
+  # Skipped jobs satisfy required-check branch protection (skipped == success).
+  changes:
+    name: Detect source changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          # `code` = anything that could affect a test outcome.
+          # Negations exclude markdown and static assets from the trigger.
+          filters: |
+            code:
+              - 'apps/**'
+              - '!apps/**/*.md'
+              - '!apps/dashboard/static/**'
+              - 'packages/**'
+              - '!packages/**/*.md'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - '.github/workflows/**'
+
   # ─── 1. Static checks (type-check + unit tests + lint) ─────────────────
   static:
     name: Type-check + unit + lint
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -48,6 +79,8 @@ jobs:
   # ─── 2. End-to-end (Playwright against a real local Supabase) ──────────
   e2e:
     name: Playwright E2E
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
