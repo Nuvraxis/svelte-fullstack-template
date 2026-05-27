@@ -48,7 +48,7 @@
     "@axe-core/playwright": "^4.10.1",
     "@faker-js/faker": "^9.2.0",
     "@playwright/test": "^1.49.0",
-    "@sveltejs/adapter-auto": "^3.3.1",
+    "@sveltejs/adapter-auto": "^7.0.1",
     "@sveltejs/adapter-node": "^5.2.9",
     "@sveltejs/kit": "^2.8.3",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
