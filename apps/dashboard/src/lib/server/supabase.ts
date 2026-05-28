@@ -5,6 +5,11 @@ import { env as publicEnv } from '$env/dynamic/public';
 import { env as privateEnv } from '$env/dynamic/private';
 import type { Database } from '$lib/types/database.types';
 
+function requireEnv(name: string, value: string | undefined): string {
+  if (!value) throw new Error(`Missing required env var: ${name}`);
+  return value;
+}
+
 export function createSupabaseServerClient(cookies: Cookies) {
   const cookieAdapter: CookieMethodsServer = {
     getAll: () => cookies.getAll(),
@@ -16,8 +21,8 @@ export function createSupabaseServerClient(cookies: Cookies) {
   };
 
   return createServerClient<Database>(
-    publicEnv.PUBLIC_SUPABASE_URL,
-    publicEnv.PUBLIC_SUPABASE_ANON_KEY,
+    requireEnv('PUBLIC_SUPABASE_URL', publicEnv.PUBLIC_SUPABASE_URL),
+    requireEnv('PUBLIC_SUPABASE_ANON_KEY', publicEnv.PUBLIC_SUPABASE_ANON_KEY),
     { cookies: cookieAdapter }
   );
 }
@@ -32,8 +37,8 @@ let _admin: ReturnType<typeof createClient<Database>> | null = null;
 export function getServiceClient() {
   if (_admin) return _admin;
   _admin = createClient<Database>(
-    publicEnv.PUBLIC_SUPABASE_URL,
-    privateEnv.SUPABASE_SERVICE_ROLE_KEY,
+    requireEnv('PUBLIC_SUPABASE_URL', publicEnv.PUBLIC_SUPABASE_URL),
+    requireEnv('SUPABASE_SERVICE_ROLE_KEY', privateEnv.SUPABASE_SERVICE_ROLE_KEY),
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
   return _admin;

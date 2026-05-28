@@ -4,6 +4,11 @@ import type { Database } from '$lib/types/database.types';
 
 let _client: ReturnType<typeof createBrowserClient<Database>> | null = null;
 
+function requireEnv(name: string, value: string | undefined): string {
+  if (!value) throw new Error(`Missing required env var: ${name}`);
+  return value;
+}
+
 /**
  * Browser-side Supabase client. Lazy-singletoned so client components share auth state.
  * Server code should use $lib/server/supabase instead.
@@ -14,8 +19,8 @@ export function getBrowserClient() {
   }
   if (!_client) {
     _client = createBrowserClient<Database>(
-      env.PUBLIC_SUPABASE_URL,
-      env.PUBLIC_SUPABASE_ANON_KEY
+      requireEnv('PUBLIC_SUPABASE_URL', env.PUBLIC_SUPABASE_URL),
+      requireEnv('PUBLIC_SUPABASE_ANON_KEY', env.PUBLIC_SUPABASE_ANON_KEY)
     );
   }
   return _client;
