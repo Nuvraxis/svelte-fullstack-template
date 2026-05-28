@@ -278,3 +278,15 @@ pnpm seed:dev --reset
 ### "Invalid export 'X' in +page.server.ts" 500 at request time
 
 SvelteKit only allows a fixed set of exports from `+page.server.ts`: `load`, `actions`, `prerender`, `csr`, `ssr`, `trailingSlash`, `config`, `entries`, plus anything `_`-prefixed. Any other value-level `export const X = …` fails route validation and returns 500 *before* `load()` runs. Either drop the `export`, prefix the name with `_`, or move the value into a sibling module under `$lib/`. (Type-only `export interface` / `export type` is fine — those erase at compile time.)
+
+### Seed fails with `listUsers: {}` (or any `auth.admin.*` call returns 502)
+
+The auth container restarted independently of the Kong API gateway, so Kong holds a stale DNS entry pointing at the auth container's old Docker IP. Login (`/auth/v1/token`) may still work — different upstream socket — but `/auth/v1/admin/*` returns `502 Bad Gateway`, which `supabase-js` surfaces as `AuthRetryableFetchError` with message `"{}"`.
+
+Confirm by comparing uptimes: `docker ps | grep supabase_` — if `supabase_auth_*` shows a much shorter uptime than `supabase_kong_*`, that's the bug. Fix is a full stack bounce so Kong re-resolves:
+
+```bash
+pnpm supabase:stop
+pnpm supabase:start
+pnpm seed:reset
+```
