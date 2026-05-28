@@ -54,7 +54,7 @@ jobs:
         with:
           version: 11.1.1   # Pinned — newer 11.x requires Node 22.13+
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.15.x  # LTS — matches what's required by current pnpm 11.x
           cache: pnpm
@@ -88,7 +88,7 @@ jobs:
         with:
           version: 11.1.1   # Pinned — newer 11.x requires Node 22.13+
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.15.x  # LTS — matches what's required by current pnpm 11.x
           cache: pnpm
