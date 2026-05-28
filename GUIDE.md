@@ -161,10 +161,10 @@ Everything below is real (not a stub). Each writes to Postgres, respects RLS, an
 
 Build:
 ```bash
-pnpm build       # produces apps/dashboard/build/
+pnpm build       # produces apps/dashboard/.vercel/ (Vercel) or apps/dashboard/build/ (Node)
 ```
 
-Adapter is `@sveltejs/adapter-node` by default. Swap for Vercel/Cloudflare/Netlify by changing `svelte.config.js`.
+The template ships with **`@sveltejs/adapter-vercel`** configured by default — optimized for Vercel's serverless deployment. If you want to self-host with Docker (or any Node runtime), switch to `@sveltejs/adapter-node` (see [Docker](#docker) below). For Cloudflare / Netlify, swap in their respective adapter in `apps/dashboard/svelte.config.js`.
 
 ```bash
 # Production env vars
@@ -174,9 +174,50 @@ SUPABASE_SERVICE_ROLE_KEY=...   # server-only
 DATABASE_URL=...                # only for seeds, not runtime
 ```
 
+### Vercel (default)
+
+This is the zero-config path — the project is already wired for it.
+
+1. Push the repo to GitHub / GitLab / Bitbucket.
+2. Import the project at [vercel.com/new](https://vercel.com/new).
+3. Configure these settings in the Vercel dashboard (this is a pnpm monorepo, so the defaults don't apply):
+
+   | Setting             | Value                                  |
+   |---------------------|----------------------------------------|
+   | Root Directory      | `apps/dashboard`                       |
+   | Framework Preset    | SvelteKit                              |
+   | Install Command     | `cd ../.. && pnpm install --frozen-lockfile` |
+   | Build Command       | `cd ../.. && pnpm build`               |
+   | Output Directory    | (leave default)                        |
+
+4. Under **Project Settings → Environment Variables**, add:
+   - `PUBLIC_SUPABASE_URL`
+   - `PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - any `PUBLIC_APP_MODE` / `PUBLIC_APP_NAME` / `PUBLIC_FEATURE_*` toggles you want non-default.
+
+5. Click **Deploy**.
+
+`ORIGIN` is not needed on Vercel — the platform sets request URLs correctly for SvelteKit's CSRF check. `PORT` / `HOST` / `BODY_SIZE_LIMIT` are also Node-adapter-only and ignored on Vercel.
+
 ### Docker
 
-A multi-stage **[Dockerfile](./Dockerfile)** ships at the repo root. It uses pnpm + the Node adapter and produces an Alpine-based runtime image (~520 MB, dominated by production node_modules) with pruned dev deps, a non-root `app` user, and `tini` for clean SIGTERM handling.
+A multi-stage **[Dockerfile](./Dockerfile)** ships at the repo root. It uses pnpm + the **Node adapter** and produces an Alpine-based runtime image (~520 MB, dominated by production node_modules) with pruned dev deps, a non-root `app` user, and `tini` for clean SIGTERM handling.
+
+> **Important:** the Dockerfile expects `@sveltejs/adapter-node`, not the default `adapter-vercel`. Before building the image, switch the adapter:
+>
+> ```bash
+> pnpm --filter dashboard remove @sveltejs/adapter-vercel
+> pnpm --filter dashboard add -D @sveltejs/adapter-node
+> ```
+>
+> Then change the import in [apps/dashboard/svelte.config.js](apps/dashboard/svelte.config.js):
+>
+> ```js
+> import adapter from '@sveltejs/adapter-node';
+> ```
+>
+> Commit the change on a separate branch / fork if you want to keep your Vercel deploy intact — the two adapters can't coexist on `main` without extra wiring.
 
 **One-command demo deploy** (Supabase Cloud as the backend):
 

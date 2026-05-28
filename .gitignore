@@ -16,6 +16,7 @@ test-results/
 .auth/
 apps/dashboard/supabase/.branches
 apps/dashboard/supabase/.temp
+
+apps/dashboard/.vercel
 coverage/
 .turbo/
-
