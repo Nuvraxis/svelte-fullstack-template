@@ -23,7 +23,9 @@ declare global {
       org?: OrgMembership | null;
       permissions?: ResolvedPermissions;
     }
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface PageState {}
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface Platform {}
   }
 }

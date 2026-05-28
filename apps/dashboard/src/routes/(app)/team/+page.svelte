@@ -7,17 +7,16 @@
   import Button from '$lib/components/ui/Button.svelte';
   import Badge from '$lib/components/ui/Badge.svelte';
   import SlideOver from '$lib/components/SlideOver.svelte';
-  import StatusBadge from '$lib/components/StatusBadge.svelte';
   import { formatRelativeDate } from '$lib/utils/formatters';
-  import type { PageData } from './$types';
+  import type { PageData, ActionData } from './$types';
 
-  let { data, form }: { data: PageData; form: any } = $props();
+  let { data, form }: { data: PageData; form: ActionData } = $props();
 
   let showInvite = $state(false);
   let inviteSubmitting = $state(false);
 
   $effect(() => {
-    if (form?.invite?.success) {
+    if (form?.invite && 'success' in form.invite && form.invite.success) {
       showInvite = false;
     }
   });
@@ -156,10 +155,10 @@
         </Button>
         <Button type="button" variant="ghost" onclick={() => (showInvite = false)}>Cancel</Button>
       </div>
-      {#if form?.invite?.error}
+      {#if form?.invite && 'error' in form.invite}
         <p class="md:col-span-4 text-xs text-danger" role="alert">{form.invite.error}</p>
       {/if}
-      {#if form?.invite?.success}
+      {#if form?.invite && 'success' in form.invite}
         <p class="md:col-span-4 text-xs text-success" role="status">
           Invite sent to {form.invite.email}.
         </p>

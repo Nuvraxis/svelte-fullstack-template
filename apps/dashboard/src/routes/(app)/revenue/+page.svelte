@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import Card from '$lib/components/ui/Card.svelte';
   import LineChart from '$lib/components/charts/LineChart.svelte';

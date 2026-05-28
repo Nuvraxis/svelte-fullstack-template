@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft, Mail, Globe, Briefcase, TrendingUp } from '@lucide/svelte';
+  import { ArrowLeft, Mail, Globe, Briefcase } from '@lucide/svelte';
   import Card from '$lib/components/ui/Card.svelte';
   import Badge from '$lib/components/ui/Badge.svelte';
   import StatusBadge from '$lib/components/StatusBadge.svelte';

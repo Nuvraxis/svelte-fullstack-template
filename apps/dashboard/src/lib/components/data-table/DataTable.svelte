@@ -151,7 +151,7 @@
 
       <tbody>
         {#if loading}
-          {#each Array.from({ length: Math.min(pageSize, 8) }) as _, i}
+          {#each Array.from({ length: Math.min(pageSize, 8) }) as _, i (i)}
             <tr class="animate-pulse border-b border-subtle">
               {#if selectable}<td class="px-3 py-3"><div class="h-4 w-4 rounded bg-surface-3"></div></td>{/if}
               {#each visibleColumns as col (col.id)}

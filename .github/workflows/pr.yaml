@@ -68,10 +68,8 @@ jobs:
       - name: Type-check
         run: pnpm --filter dashboard exec svelte-check --output human
 
-      # Lint is disabled until eslint.config.js is added.
-      # See packages/config/package.json — the ./eslint export points at a
-      # file that doesn't exist yet. Drop in a flat config there and re-enable:
-      #   run: pnpm --filter dashboard exec eslint .
+      - name: Lint
+        run: pnpm --filter dashboard lint
 
       - name: Unit tests
         run: pnpm test:unit

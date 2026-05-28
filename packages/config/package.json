@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./tsconfig.json": "./tsconfig.json",
-    "./eslint": "./eslint.config.js"
+    "./tsconfig.json": "./tsconfig.json"
   }
 }

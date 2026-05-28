@@ -26,7 +26,6 @@
 
   const rows = $derived(data.subscriptions as unknown as SubRow[]);
   const planSummary = $derived(Object.values(data.planMrr));
-  const totalMrr = $derived(planSummary.reduce((s, p) => s + p.mrr, 0));
   const totalActive = $derived(planSummary.reduce((s, p) => s + p.count, 0));
 
   function updateUrl(u: Record<string, string | null>) {

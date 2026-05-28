@@ -6,7 +6,6 @@
   import DataTable from '$lib/components/data-table/DataTable.svelte';
   import type { ColumnDef } from '$lib/components/data-table/types';
   import StatusBadge from '$lib/components/StatusBadge.svelte';
-  import Card from '$lib/components/ui/Card.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { formatDate, formatCurrency } from '$lib/utils/formatters';
   import type { PageData } from './$types';
