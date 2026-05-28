@@ -1,0 +1,47 @@
+# VaultFlow demo deployment.
+#
+# Usage:
+#   1. cp apps/dashboard/.env.example .env  (then fill in Supabase Cloud creds)
+#   2. docker compose up --build -d
+#   3. open http://localhost:3000
+#
+# This stack assumes you're using Supabase Cloud (or a remote Supabase). For a
+# fully self-hosted stack including Postgres+Auth+Storage, see Supabase's
+# official compose file: https://github.com/supabase/supabase/tree/master/docker
+
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: vaultflow/dashboard:latest
+    container_name: vaultflow-dashboard
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      ORIGIN: ${ORIGIN:-http://localhost:3000}
+
+      # --- Supabase (required) ---
+      PUBLIC_SUPABASE_URL: ${PUBLIC_SUPABASE_URL}
+      PUBLIC_SUPABASE_ANON_KEY: ${PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+
+      # --- App config (optional, with sensible defaults) ---
+      PUBLIC_APP_MODE: ${PUBLIC_APP_MODE:-both}
+      PUBLIC_APP_NAME: ${PUBLIC_APP_NAME:-VaultFlow}
+      PUBLIC_DEFAULT_CURRENCY: ${PUBLIC_DEFAULT_CURRENCY:-USD}
+      PUBLIC_DEFAULT_TIMEZONE: ${PUBLIC_DEFAULT_TIMEZONE:-UTC}
+      PUBLIC_FEATURE_REALTIME: ${PUBLIC_FEATURE_REALTIME:-true}
+      PUBLIC_FEATURE_FRAUD: ${PUBLIC_FEATURE_FRAUD:-true}
+      PUBLIC_FEATURE_EXPORTS: ${PUBLIC_FEATURE_EXPORTS:-true}
+      PUBLIC_FEATURE_REPORTS: ${PUBLIC_FEATURE_REPORTS:-true}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

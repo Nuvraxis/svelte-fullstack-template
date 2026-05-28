@@ -1,0 +1,38 @@
+**/node_modules
+**/.svelte-kit
+**/build
+**/dist
+**/.turbo
+**/coverage
+
+# Local env — never bake secrets into the image
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Tests & reports
+**/playwright-report
+**/test-results
+**/.auth
+**/tests/e2e/.auth
+
+# Supabase local stack scratch dirs
+apps/dashboard/supabase/.branches
+apps/dashboard/supabase/.temp
+
+# VCS & editors
+.git
+.gitignore
+.github
+.vscode
+.idea
+.DS_Store
+
+# Docs and meta (not needed at runtime)
+**/*.md
+!apps/dashboard/README.md
+CLAUDE.md
+
+# Misc
+**/*.log
+.pnpm-store

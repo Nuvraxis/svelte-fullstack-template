@@ -1,4 +1,5 @@
 import type { Session, User } from '@supabase/supabase-js';
+// Session type retained for server-side Locals; not exposed in PageData.
 import type { SupabaseServerClient } from '$lib/server/supabase';
 import type { ResolvedPermissions, OrgMembership, UserProfile } from '$lib/types/rbac.types';
 
@@ -18,7 +19,6 @@ declare global {
       permissions: ResolvedPermissions;
     }
     interface PageData {
-      session?: Session | null;
       user?: UserProfile | null;
       org?: OrgMembership | null;
       permissions?: ResolvedPermissions;

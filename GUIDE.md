@@ -174,6 +174,72 @@ SUPABASE_SERVICE_ROLE_KEY=...   # server-only
 DATABASE_URL=...                # only for seeds, not runtime
 ```
 
+### Docker
+
+A multi-stage **[Dockerfile](./Dockerfile)** ships at the repo root. It uses pnpm + the Node adapter and produces an Alpine-based runtime image (~520 MB, dominated by production node_modules) with pruned dev deps, a non-root `app` user, and `tini` for clean SIGTERM handling.
+
+**One-command demo deploy** (Supabase Cloud as the backend):
+
+```bash
+# Prep your Supabase Cloud project once
+cd apps/dashboard
+supabase link --project-ref <your-ref>
+supabase db push                  # apply migrations
+pnpm seed:dev --reset             # seed demo data against the cloud DB
+cd ../..
+
+# Configure runtime env (at the repo root, NOT apps/dashboard)
+cp apps/dashboard/.env.example .env
+# edit .env → set PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY / SUPABASE_SERVICE_ROLE_KEY
+# also set ORIGIN to the URL you'll expose (https://demo.example.com),
+# otherwise SvelteKit's CSRF protection will reject form submissions.
+
+docker compose up --build -d
+# → http://localhost:3000
+docker compose logs -f dashboard
+```
+
+**Manual build / run** (without compose):
+
+```bash
+docker build -t vaultflow/dashboard:latest .
+
+docker run -d --name vaultflow \
+  -p 3000:3000 \
+  -e PUBLIC_SUPABASE_URL=https://<ref>.supabase.co \
+  -e PUBLIC_SUPABASE_ANON_KEY=eyJ... \
+  -e SUPABASE_SERVICE_ROLE_KEY=eyJ... \
+  -e ORIGIN=https://demo.example.com \
+  vaultflow/dashboard:latest
+```
+
+**Runtime env vars:**
+
+| Var                          | Required | Notes                                                                                  |
+|------------------------------|:--------:|----------------------------------------------------------------------------------------|
+| `PUBLIC_SUPABASE_URL`        | ✅       | Supabase project URL                                                                   |
+| `PUBLIC_SUPABASE_ANON_KEY`   | ✅       | Anon (publishable) key                                                                 |
+| `SUPABASE_SERVICE_ROLE_KEY`  | ✅       | Server-only; used by invite-member flow                                                |
+| `ORIGIN`                     | ⚠️       | Required when behind a reverse proxy — set to the *public* URL (`https://…`)           |
+| `PORT`                       | ❌       | Defaults to `3000`                                                                     |
+| `HOST`                       | ❌       | Defaults to `0.0.0.0`                                                                  |
+| `BODY_SIZE_LIMIT`            | ❌       | Defaults to `5M`; raise if you accept large form uploads                               |
+| `PUBLIC_APP_MODE`            | ❌       | `fintech` \| `saas` \| `both` (default)                                                |
+| `PUBLIC_APP_NAME`            | ❌       | Brand name shown in topbar / logo                                                      |
+| `PUBLIC_FEATURE_*`           | ❌       | Toggle realtime / fraud / exports / reports modules                                    |
+
+`DATABASE_URL` is **not** needed at runtime — only by seed scripts run from your dev box.
+
+**Behind a reverse proxy** (Caddy / Nginx / Cloudflare Tunnel): set `ORIGIN` to the public URL so cookie SameSite + SvelteKit's CSRF check both work. With Caddy:
+
+```caddyfile
+demo.example.com {
+  reverse_proxy localhost:3000
+}
+```
+
+**Deploy targets** the same image runs on: Fly.io (`fly launch --dockerfile`), Railway, Render, Cloud Run, Kubernetes, plain VPS with `docker compose`. No platform-specific glue.
+
 ## 8. Testing
 
 ```bash

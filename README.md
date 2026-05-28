@@ -55,6 +55,28 @@ Open the printed Supabase keys and paste into `apps/dashboard/.env.local` (or co
 
 Next: skim **[GUIDE.md](./GUIDE.md)** to swap brand colors, fonts, add a permission, or deploy.
 
+## Docker (demo deploy)
+
+The repo ships a multi-stage **[Dockerfile](./Dockerfile)** and **[docker-compose.yml](./docker-compose.yml)** that build the dashboard against Supabase Cloud.
+
+```bash
+# 1. Create a project at https://supabase.com → grab URL + anon key + service-role key
+# 2. Apply migrations (from apps/dashboard):
+#       supabase link --project-ref <your-ref> && supabase db push
+# 3. Seed demo data against the cloud DB:
+#       pnpm --filter dashboard seed:dev --reset
+# 4. Create the runtime env file at repo root:
+cp apps/dashboard/.env.example .env
+#    fill in PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+#    set ORIGIN to the public URL you'll expose (e.g. https://demo.example.com)
+
+# 5. Build + run
+docker compose up --build -d
+# → http://localhost:3000
+```
+
+See **[GUIDE.md → Deployment](./GUIDE.md#docker)** for the full walkthrough (reverse proxy, TLS, env reference).
+
 ## Demo credentials
 
 | Email                  | Role             | What they see                                      |

@@ -14,7 +14,8 @@ dist/
 playwright-report/
 test-results/
 .auth/
-supabase/.branches
-supabase/.temp
+apps/dashboard/supabase/.branches
+apps/dashboard/supabase/.temp
 coverage/
 .turbo/
+
