@@ -320,7 +320,7 @@ The seed script in `lib/db/seed/` is purely for the demo. To wire VaultFlow to y
 
 ## 11. The demo
 
-See [Demo Video]() of the product.
+See [Demo Video](svelte-fullstack-template-dashboard.vercel.app) of the product.
 
 ## 12. Troubleshooting
 

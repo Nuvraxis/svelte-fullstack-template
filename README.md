@@ -6,7 +6,7 @@
 VaultFlow is a fully-working SvelteKit 5 admin dashboard that ships as source — no closed component library. Fork once, retheme via one CSS file, sell client implementations. Two verticals in one template: flip between **Fintech** and **SaaS** mode via a config flag.
 
 ## Product Demo
-- See [Demo Video]() of the product.
+- See [Demo Video](svelte-fullstack-template-dashboard.vercel.app) of the product.
 
 ## Documentation
 
