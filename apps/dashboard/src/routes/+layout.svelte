@@ -3,6 +3,7 @@
   import type { Snippet } from 'svelte';
   import { onMount } from 'svelte';
   import { uiStore } from '$lib/stores/ui.store.svelte';
+  import NavigationProgress from '$lib/components/layout/NavigationProgress.svelte';
 
   interface Props {
     children: Snippet;
@@ -19,4 +20,5 @@
   <title>VaultFlow</title>
 </svelte:head>
 
+<NavigationProgress />
 {@render children()}

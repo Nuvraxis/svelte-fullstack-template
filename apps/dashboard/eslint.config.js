@@ -40,6 +40,7 @@ export default [
   {
     ignores: [
       '.svelte-kit/',
+      '.vercel/',
       'build/',
       'dist/',
       'node_modules/',
